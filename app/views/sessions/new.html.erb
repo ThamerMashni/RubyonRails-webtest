@@ -1,0 +1,18 @@
+<div class="col-md-2">
+<h2>Log In</h2>   
+</div>
+<div class="p-3 border rounded col-md-6">
+	<%= form_tag sessions_path do %>   
+	<div>   
+	<%= label_tag :email %><br>   
+	<%= text_field_tag :email %>   
+	</div>   
+	  <div>   
+	    <%= label_tag :password %><br>   
+	<%= password_field_tag :password %>   
+	</div>   
+	<div>   
+	    <%= submit_tag "Log In" , :class=>"mt-3 btn login-btn"%>   
+	</div>   
+	<% end %>  
+</div>

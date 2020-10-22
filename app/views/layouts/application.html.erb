@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prac1</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="container">
+    <header id="header" class="fixed">
+      <div class="container d-flex align-items-center">
+          <h1 class="logo mr-auto"><a href="./">Web Test</a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <div class="text-align-right">
+                  <% if current_user %>  
+                    Logged in as <%= current_user.email %>.  
+                    <%= link_to "Log Out", logout_path, class: "btn login-btn" %>  
+                  <% else %>  
+                    <%= link_to "Sign Up", signup_path, class: "btn login-btn" %>  
+                    <%= link_to "Log In", login_path, class: "btn login-btn" %>  
+                  <% end %> 
+          </div>
+      </div>
+    </header><!-- End Header -->
+<!--     <p id="notice"><%= notice %></p>
+ -->
+
+    <div id="user_header">  
+      <% flash.each do |key, value| %>  
+        <%= content_tag(:div, class: "alert alert-#{key}") do %>  
+          <p><%= value %></p>  
+        <% end %>  
+      <% end %> 
+    </div>  
+    <div class=" m-4 p-4 row justify-content-center">
+      <%= yield %>
+    </div>
+  </body>
+
+</html>

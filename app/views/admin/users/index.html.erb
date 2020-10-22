@@ -1,0 +1,124 @@
+
+<div class="container">
+  <div class="pb-3">
+  <h1>Users</h1>
+</div>
+<!-- <link rel="stylesheet" type="text/css" href="/DataTables/datatables.min.css"/> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
+<!-- <link rel="stylesheet" type="text/css" href="/DataTables/buttons.dataTables.min.css"/> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/autofill/2.3.5/css/autoFill.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/autofill/2.3.5/css/autoFill.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.5.2/css/colReorder.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.3.1/css/fixedColumns.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/keytable/2.5.3/css/keyTable.dataTables.min.css"/>
+
+
+<div class="">
+  <table id="datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th class="filter"> Gender</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th>CV</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+        <% if !user.admin?%>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.gender %></td>
+            <td><%= user.email %></td>
+            <td><%= user.mobile %></td>
+            <% if user.cvFile.attached? %>
+              <td><%= link_to 'View CV', url_for(user.cvFile) , target: :_blank %></td>
+            <%else%> 
+              <td>No Available</td>
+            <%end%>
+            <td><%= link_to 'Edit', edit_admin_user_path(user) %></td>
+            <td><%= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <%end%>
+      <% end %>
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Mobile</th>
+        <th> Export</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </tfoot>
+</table>
+</div>
+</div>
+
+
+
+
+<script src="/jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="/DataTables/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.colVis.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/colreorder/1.5.2/js/dataTables.colReorder.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/autofill/2.3.5/js/dataTables.autoFill.min.js"></script>
+
+
+
+<script type="text/javascript"> 
+  $(document).ready(function() {
+      $('#datatable').DataTable( {
+          "pageLength": 5,
+          "lengthMenu": [ 5, 10, 25, 50],
+          dom: 'Bfrtip',
+          buttons: [
+             'csv', 'excel', 'print'
+          ],
+
+          initComplete: function () {
+              this.api().columns('.filter').every( function () {
+                  var column = this;
+                  var select = $('<select><option value=""></option></select>')
+                      .appendTo( $(column.footer()).empty() )
+                      .on( 'change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex(
+                              $(this).val()
+                          );
+                          column
+                              .search( val ? '^'+val+'$' : '', true, false )
+                              .draw();
+                      } );
+   
+                  column.data().unique().sort().each( function ( d, j ) {
+                      select.append( '<option value="'+d+'">'+d+'</option>' )
+                  } );
+              } );
+          }
+      } );
+  } );
+   
+    // var table = $("#datatable").DataTable({
+    //     "pageLength": 5,
+    //     "lengthMenu": [ 5, 10, 25, 50],
+    //     dom: 'Blfrtip',
+    //     buttons: [
+    //       'copy', 'csv', 'excel', 'pdf', 'print'
+    //     ]
+    // });  
+</script>
+
+
